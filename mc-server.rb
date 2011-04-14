@@ -9,7 +9,7 @@ server = TCPServer.open(2000)   # Socket to listen on port 2000
 #    puts session.gets
 #    client.close                # Disconnect from the client
 #  end
-#}
+#} comment
 puts "Server Started"
 while (session = server.accept)
  #start new thread conversation
