@@ -1,5 +1,10 @@
 # multiple client tcp server
 require 'socket'                # Get sockets from stdlib
+def generate_token()
+   o =  [('a'..'z'),('A'..'Z')].map{|i| i.to_a}.flatten;  
+   token =  (0..50).map{ o[rand(o.length)]  }.join;
+   return token
+end
 
 server = TCPServer.open(2000)   # Socket to listen on port 2000
 #loop {                          # Servers run forever
@@ -23,14 +28,29 @@ while (session = server.accept)
    ## lets see what the client has to say by grabbing the input
    ## then display it. Please note that the session.gets will look
    ## for an end of line character "\n" before moving forward.
-   input = session.gets
-   puts input
-   ## Lets respond with a nice warm welcome message
-   session.puts "Server: Welcome #{session.peeraddr[2]}\n"
-   # reply with goodbye
-   ## now lets end the session since all we wanted to do is
-   ## acknowledge the client
-   puts "log: sending Goodbye"
-   session.puts "Server: Goodbye\n"
+   username = session.gets
+   password = session.gets
+   if username != nil && password != nil 
+      token = generate_token
+      puts "#{username}"
+puts "#{username.length}"
+      username[username.length-1,1]=""
+      if username  == "sanu" 
+         puts "hello"
+      end
+      #token = "123456"
+      ## Lets respond with a nice warm welcome message
+      #session.puts "Server: Welcome #{session.peeraddr[2]} with #{token}\n"
+      session.puts "#{token}\n"
+   else
+      token = ""
+      # reply with goodbye
+      ## now lets end the session since all we wanted to do is
+      ## acknowledge the client
+      puts "log: sending Goodbye"
+      session.puts "Server: Goodbye\n"
+   end
  end  #end thread conversation
 end   #end loop
+
+
