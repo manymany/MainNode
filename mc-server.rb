@@ -1,6 +1,9 @@
 # multiple client tcp server
 require 'socket'                # Get sockets from stdlib
-require 'read-fdb.rb'
+#require 'read-fdb.rb'
+require 'user.rb'
+require 'fill-users.rb'
+
 def generate_token()
    o =  [('a'..'z'),('A'..'Z')].map{|i| i.to_a}.flatten;  
    token =  (0..50).map{ o[rand(o.length)]  }.join;
@@ -8,7 +11,16 @@ def generate_token()
 end
 
 puts "Loading users..."
-users=read_file="cdb.db"
+fname="cdb.db"
+#u = User.new
+#u.read_file=(fname,users={})
+#u.get_users.each do|id,user|
+#  puts "#{id}: #{user}"
+#  puts user.get_id
+#end
+
+users = Hash.new
+users = read_file(fname,m={})
 puts "Done loading..."
 server = TCPServer.open(2000)   # Socket to listen on port 2000
 #loop {                          # Servers run forever
@@ -35,16 +47,15 @@ while (session = server.accept)
    username = session.gets
    password = session.gets
    if username != nil && password != nil 
-      token = generate_token
-      puts "#{username}"
-puts "#{username.length}"
       username[username.length-1,1]=""
-      if username  == "sanu" 
-         puts "hello"
+      u = users[username]
+     if u.get_id == username
+         token = generate_token
+         puts "found in map"
+         session.puts "#{token}\n"
       end
       ## Lets respond with a nice warm welcome message
       #session.puts "Server: Welcome #{session.peeraddr[2]} with #{token}\n"
-      session.puts "#{token}\n"
    else
       token = ""
       # reply with goodbye
