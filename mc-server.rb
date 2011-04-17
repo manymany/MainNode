@@ -1,11 +1,15 @@
 # multiple client tcp server
 require 'socket'                # Get sockets from stdlib
+require 'read-fdb.rb'
 def generate_token()
    o =  [('a'..'z'),('A'..'Z')].map{|i| i.to_a}.flatten;  
    token =  (0..50).map{ o[rand(o.length)]  }.join;
    return token
 end
 
+puts "Loading users..."
+users=read_file="cdb.db"
+puts "Done loading..."
 server = TCPServer.open(2000)   # Socket to listen on port 2000
 #loop {                          # Servers run forever
 #  Thread.start((session=server.accept)) do |client|
@@ -38,7 +42,6 @@ puts "#{username.length}"
       if username  == "sanu" 
          puts "hello"
       end
-      #token = "123456"
       ## Lets respond with a nice warm welcome message
       #session.puts "Server: Welcome #{session.peeraddr[2]} with #{token}\n"
       session.puts "#{token}\n"
