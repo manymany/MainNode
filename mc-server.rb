@@ -12,12 +12,6 @@ end
 
 puts "Loading users..."
 fname="cdb.db"
-#u = User.new
-#u.read_file=(fname,users={})
-#u.get_users.each do|id,user|
-#  puts "#{id}: #{user}"
-#  puts user.get_id
-#end
 
 users = Hash.new
 users = read_file(fname,m={})
@@ -49,13 +43,20 @@ while (session = server.accept)
    if username != nil && password != nil 
       username[username.length-1,1]=""
       u = users[username]
-     if u.get_id == username
-         token = generate_token
-         puts "found in map"
-         session.puts "#{token}\n"
-      end
+     puts u
+     if (u.nil?)
+        puts "not found"
+     else
+        if u.get_id == username
+            token = generate_token
+            puts "found in map"
+            session.puts "#{token}\n"
+        end
+     end
       ## Lets respond with a nice warm welcome message
       #session.puts "Server: Welcome #{session.peeraddr[2]} with #{token}\n"
+      puts "log: sending Goodbye"
+      session.puts "Server: Goodbye - Not Authorized\n"
    else
       token = ""
       # reply with goodbye
