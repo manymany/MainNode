@@ -41,11 +41,12 @@ while (session = server.accept)
    username = session.gets
    password = session.gets
    if username != nil && password != nil 
-      username[username.length-1,1]=""
-      u = users[username]
-     puts u
+     username[username.length-1,1]=""
+     u = users[username]
      if (u.nil?)
         puts "not found"
+        puts "log: sending Goodbye"
+        session.puts "Server: Goodbye - Not Authorized\n"
      else
         if u.get_id == username
             token = generate_token
@@ -55,8 +56,6 @@ while (session = server.accept)
      end
       ## Lets respond with a nice warm welcome message
       #session.puts "Server: Welcome #{session.peeraddr[2]} with #{token}\n"
-      puts "log: sending Goodbye"
-      session.puts "Server: Goodbye - Not Authorized\n"
    else
       token = ""
       # reply with goodbye
